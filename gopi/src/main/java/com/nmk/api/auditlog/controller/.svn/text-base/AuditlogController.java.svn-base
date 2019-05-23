@@ -1,0 +1,89 @@
+package com.nmk.api.auditlog.controller;
+
+import java.util.List;
+
+import javax.validation.Valid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.nmk.api.auditlog.AuditlogNotFoundException;
+import com.nmk.api.auditlog.model.Auditlog;
+import com.nmk.api.auditlog.repository.AuditlogRepository;
+
+
+
+
+@RestController
+@RequestMapping("/api/v1/auditlog")
+public class AuditlogController {
+		 private final Logger logger = LoggerFactory.getLogger(this.getClass());
+		
+		 @Autowired
+		AuditlogRepository auditlogRepository1;
+		
+		 @RequestMapping("/")
+		    String hello(){
+		        logger.debug("Debug message");
+		        logger.info("Info message");
+		        logger.warn("Warn message");
+		        logger.error("Error message");
+		        return "Done";
+		    }  
+		 
+		 @GetMapping(value="",produces={MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+		   public List<Auditlog> getAllAuditlog() {
+		        return auditlogRepository1.findAll();	    
+		    }
+		 @GetMapping(value="/{idx}",produces={MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+		 public Auditlog getAuditlogByIdx(@PathVariable(value = "idx") Integer auditlogIdx) {
+		        return auditlogRepository1.findById(auditlogIdx)
+		                .orElseThrow(() -> new AuditlogNotFoundException("idx-" + auditlogIdx + " is not exist"));
+		    }
+		      
+		   
+		   
+		 @PostMapping(value="",produces={MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+		    public Auditlog createAuditlog(@Valid @RequestBody Auditlog auditlog1) {
+		        return auditlogRepository1.save(auditlog1);
+		    }
+		   
+		 @PutMapping(value="/{idx}",produces={MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+		    public Auditlog updateAuditlog(@PathVariable(value = "idx") Integer auditlogIdx,
+		                                           @Valid @RequestBody Auditlog auditlogDetails) {
+
+			   Auditlog auditlog1 = auditlogRepository1.findById(auditlogIdx)
+		                .orElseThrow(() ->new AuditlogNotFoundException("idx-" + auditlogIdx + " is not exist"));
+			   auditlog1.setDescription(auditlogDetails.getDescription());
+			   auditlog1.setXmlMsg(auditlogDetails.getXmlMsg());
+			   auditlog1.setTransTypeIdx(auditlogDetails.getTransTypeIdx());
+			   auditlog1.setCreatedBy(auditlogDetails.getCreatedBy());
+			   auditlog1.setCreateDate(auditlogDetails.getCreateDate());
+			   auditlog1.setModifiedBy(auditlogDetails.getModifiedBy());
+			   auditlog1.setModifiedDate(auditlogDetails.getModifiedDate());
+			   
+			   Auditlog updatedAuditlog = auditlogRepository1.save(auditlog1);
+		        return updatedAuditlog;
+		    }
+		   
+		 @DeleteMapping(value="/{idx}",produces={MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+		    public ResponseEntity<?> deleteAuditlog(@PathVariable(value = "idx") Integer auditlogIdx) {
+			   Auditlog auditlog1 = auditlogRepository1.findById(auditlogIdx)
+		                .orElseThrow(() -> new AuditlogNotFoundException("idx-" + auditlogIdx + " is not exist"));
+
+		        auditlogRepository1.delete(auditlog1);
+
+		        return ResponseEntity.ok().build();
+		    }
+	}

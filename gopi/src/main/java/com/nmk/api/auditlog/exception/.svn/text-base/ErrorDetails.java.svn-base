@@ -1,0 +1,35 @@
+package com.nmk.api.auditlog.exception;
+import java.util.Date;
+
+import org.springframework.http.HttpStatus;
+public class ErrorDetails {
+	
+	private int status;
+	private Date timestamp;
+	  private String message;
+	  private String details;
+	  
+	  public ErrorDetails(int i, Date timestamp, String message, String details) {
+	    super();
+	    this.status= i;
+	    this.timestamp = timestamp;
+	    this.message = message;
+	    this.details = details;
+	  }
+	  
+	
+
+	public int getStatus() {
+		return status;
+	}
+
+	public Date getTimestamp() {
+	    return timestamp;
+	  }
+	  public String getMessage() {
+	    return message;
+	  }
+	  public String getDetails() {
+	    return details;
+	  }
+}

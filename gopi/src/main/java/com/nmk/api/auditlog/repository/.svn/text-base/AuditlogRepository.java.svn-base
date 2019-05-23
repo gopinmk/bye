@@ -1,0 +1,11 @@
+package com.nmk.api.auditlog.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.nmk.api.auditlog.model.Auditlog;
+
+@Repository
+public interface AuditlogRepository extends JpaRepository<Auditlog, Integer>{
+
+}
