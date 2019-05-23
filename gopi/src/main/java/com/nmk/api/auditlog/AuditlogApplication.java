@@ -11,6 +11,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 public class AuditlogApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(AuditlogApplication.class, args);
+		SpringApplication.run(AuditlogApplication.class, arg);
 	}
 }
